@@ -48,27 +48,26 @@ public class OneOfValidator extends BaseJsonValidator implements JsonValidator {
 
         int numberOfValidSchema = 0;
         Set<ValidationMessage> errors = new LinkedHashSet<ValidationMessage>();
-        
+
         for (JsonSchema schema : schemas) {
-        	Set<ValidationMessage> schemaErrors = schema.validate(node, rootNode, at);
+            Set<ValidationMessage> schemaErrors = schema.validate(node, rootNode, at);
             if (schemaErrors.isEmpty()) {
                 numberOfValidSchema++;
                 errors = new LinkedHashSet<ValidationMessage>();
             }
             if(numberOfValidSchema == 0){
-        		errors.addAll(schemaErrors);
-        	}
+                errors.addAll(schemaErrors);
+            }
             if (numberOfValidSchema > 1) {
                 break;
             }
         }
-        
+
         if (numberOfValidSchema == 0) {
             for (Iterator<ValidationMessage> it = errors.iterator(); it.hasNext();) {
                 ValidationMessage msg = it.next();
-                
-                if (ValidatorTypeCode.ADDITIONAL_PROPERTIES.equals(ValidatorTypeCode.fromValue(msg
-                        .getType()))) {
+
+                if (ValidatorTypeCode.ADDITIONAL_PROPERTIES.getValue().equals(msg.getType())) {
                     it.remove();
                 }
             }
@@ -76,7 +75,7 @@ public class OneOfValidator extends BaseJsonValidator implements JsonValidator {
         if (numberOfValidSchema > 1) {
             errors = Collections.singleton(buildValidationMessage(at, ""));
         }
-        
+
         return Collections.unmodifiableSet(errors);
     }
 

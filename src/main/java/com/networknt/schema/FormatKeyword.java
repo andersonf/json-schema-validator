@@ -28,8 +28,7 @@ public class FormatKeyword implements Keyword {
             format = formats.get(formatName);
         }
 
-        //return new FormatValidator(schemaPath, schemaNode, parentSchema, validationContext, format);
-        return null;
+        return new FormatValidator(schemaPath, schemaNode, parentSchema, validationContext, format);
     }
     
     @Override
