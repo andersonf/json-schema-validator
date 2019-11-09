@@ -61,8 +61,8 @@ public class FormatValidator extends BaseJsonValidator implements JsonValidator 
     private String format;
     private Pattern p;
 
-    public FormatValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema, ObjectMapper mapper) {
-        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.FORMAT);
+    public FormatValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema, ValidationContext validationContext) {
+        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.FORMAT, validationContext);
         format = "";
         if (schemaNode != null && schemaNode.isTextual()) {
             format = schemaNode.textValue();

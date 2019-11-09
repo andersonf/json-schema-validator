@@ -38,30 +38,29 @@ public class JsonSchema extends BaseJsonValidator {
     private static final Logger logger = LoggerFactory.getLogger(JsonSchema.class);
     private static final Pattern intPattern = Pattern.compile("^[0-9]+$");
     protected Map<String, JsonValidator> validators;
-    private ObjectMapper mapper;
+    private final ValidationContext validationContext;
 
-    JsonSchema(ObjectMapper mapper, JsonNode schemaNode) {
-        this(mapper, "#", schemaNode, null);
+    JsonSchema(ValidationContext validationContext, JsonNode schemaNode) {
+        this(validationContext, "#", schemaNode, null);
     }
 
-    JsonSchema(ObjectMapper mapper, String schemaPath, JsonNode schemaNode,
+    JsonSchema(ValidationContext validationContext, String schemaPath, JsonNode schemaNode,
                JsonSchema parent) {
-        super(schemaPath, schemaNode, parent, null);
-        this.init(mapper, schemaNode);
+        this(validationContext,  schemaPath, schemaNode, parent, obainSubSchemaNode(schemaNode, validationContext));
     }
 
-    JsonSchema(ObjectMapper mapper, String schemaPath, JsonNode schemaNode,
+    JsonSchema(ValidationContext validatorFactory, String schemaPath, JsonNode schemaNode,
                JsonSchema parent, JsonSchema subSchema) {
         super(schemaPath, schemaNode, parent, null, subSchema);
-        this.init(mapper, schemaNode);
+        this.validationContext = validatorFactory;
+        this.init(validationContext, schemaNode);
     }
 
-    public JsonSchema(ObjectMapper mapper, JsonNode schemaNode, JsonSchema subSchema) {
-        this(mapper, "#", schemaNode, null, subSchema);
+    public JsonSchema(ValidationContext validationContext, JsonNode schemaNode, JsonSchema subSchema) {
+        this(validationContext, "#", schemaNode, null, subSchema);
     }
 
-    private void init(ObjectMapper mapper, JsonNode schemaNode) {
-        this.mapper = mapper;
+    private void init(ValidationContext validationContext, JsonNode schemaNode) {
         this.validators = new LinkedHashMap<String, JsonValidator>();
         this.read(schemaNode);
     }
@@ -131,9 +130,11 @@ public class JsonSchema extends BaseJsonValidator {
                         .forName("com.networknt.schema." + className);
                 Constructor<JsonValidator> c = null;
                 c = clazz.getConstructor(new Class[]{String.class,
-                        JsonNode.class, JsonSchema.class, ObjectMapper.class});
-                validators.put(getSchemaPath() + "/" + pname, c.newInstance(
-                        getSchemaPath() + "/" + pname, n, this, mapper));
+                        JsonNode.class, JsonSchema.class, ValidationContext.class});
+
+                JsonValidator jsonValidator = c.newInstance(getSchemaPath() + "/" + pname, n, this, validationContext);
+                validators.put(getSchemaPath() + "/" + pname, jsonValidator);
+                System.out.println(validators);
             } catch (IllegalArgumentException e) {
                 // ignore unsupported schema node
             } catch (InvocationTargetException e) {

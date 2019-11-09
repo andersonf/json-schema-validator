@@ -29,9 +29,9 @@ public class NotValidator extends BaseJsonValidator implements JsonValidator {
 
     private JsonSchema schema;
 
-    public NotValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema, ObjectMapper mapper) {
-        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.NOT);
-        schema = new JsonSchema(mapper, getValidatorType().getValue(), schemaNode, parentSchema);
+    public NotValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema, ValidationContext validationContext) {
+        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.NOT, validationContext);
+        schema = new JsonSchema(validationContext, getValidatorType().getValue(), schemaNode, parentSchema);
 
         parseErrorCode(getValidatorType().getErrorCodeKey());
     }

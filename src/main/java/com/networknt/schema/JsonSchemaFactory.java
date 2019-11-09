@@ -42,10 +42,15 @@ public class JsonSchemaFactory {
         this.mapper = mapper;
     }
 
+    public ObjectMapper getMapper() {
+        return mapper;
+    }
+
     public JsonSchema getSchema(String schema) {
         try {
             JsonNode schemaNode = mapper.readTree(schema);
-            return new JsonSchema(mapper, schemaNode);
+            ValidationContext validationContext = new ValidationContext(null, this);
+            return new JsonSchema(validationContext, schemaNode);
         } catch (IOException ioe) {
             logger.error("Failed to load json schema!", ioe);
             throw new JsonSchemaException(ioe);
@@ -55,7 +60,8 @@ public class JsonSchemaFactory {
     public JsonSchema getSchema(InputStream schemaStream) {
         try {
             JsonNode schemaNode = mapper.readTree(schemaStream);
-            return new JsonSchema(mapper, schemaNode);
+            ValidationContext validationContext = new ValidationContext(null, this);
+            return new JsonSchema(validationContext, schemaNode);
         } catch (IOException ioe) {
             logger.error("Failed to load json schema!", ioe);
             throw new JsonSchemaException(ioe);
@@ -66,12 +72,13 @@ public class JsonSchemaFactory {
         try {
 
             JsonNode schemaNode = mapper.readTree(schemaURL.openStream());
+            ValidationContext validationContext = new ValidationContext(null, this);
 
             if (this.idMatchesSourceUrl(schemaNode, schemaURL)) {
-                return new JsonSchema(mapper, schemaNode, null);
+                return new JsonSchema(validationContext, schemaNode, null);
             }
 
-            return new JsonSchema(mapper, schemaNode);
+            return new JsonSchema(validationContext, schemaNode);
 
         } catch (IOException ioe) {
             logger.error("Failed to load json schema!", ioe);
@@ -80,7 +87,8 @@ public class JsonSchemaFactory {
     }
 
     public JsonSchema getSchema(JsonNode jsonNode) {
-        return new JsonSchema(mapper, jsonNode);
+        ValidationContext validationContext = new ValidationContext(null, this);
+        return new JsonSchema(validationContext, jsonNode);
     }
 
     private boolean idMatchesSourceUrl(JsonNode schema, URL schemaUrl) {

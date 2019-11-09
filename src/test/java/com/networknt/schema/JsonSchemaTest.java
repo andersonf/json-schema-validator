@@ -16,6 +16,7 @@
 
 package com.networknt.schema;
 
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -75,7 +76,11 @@ public class JsonSchemaTest {
         for (int j = 0; j < testCases.size(); j++) {
             try {
                 JsonNode testCase = testCases.get(j);
-                JsonSchema schema = new JsonSchema(mapper, testCase.get("schema"));
+
+
+                ValidationContext validationContext = new ValidationContext(null, new JsonSchemaFactory());
+
+                JsonSchema schema = new JsonSchema(validationContext, testCase.get("schema"));
                 ArrayNode testNodes = (ArrayNode) testCase.get("tests");
                 for (int i = 0; i < testNodes.size(); i++) {
                     JsonNode test = testNodes.get(i);

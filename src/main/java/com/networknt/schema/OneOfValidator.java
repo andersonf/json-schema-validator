@@ -34,11 +34,11 @@ public class OneOfValidator extends BaseJsonValidator implements JsonValidator {
 
     private List<JsonSchema> schemas = new ArrayList<JsonSchema>();
 
-    public OneOfValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema, ObjectMapper mapper) {
-        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.ONE_OF);
+    public OneOfValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema, ValidationContext validationContext) {
+        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.ONE_OF, validationContext);
         int size = schemaNode.size();
         for (int i = 0; i < size; i++) {
-            schemas.add(new JsonSchema(mapper, getValidatorType().getValue(), schemaNode.get(i), parentSchema));
+            schemas.add(new JsonSchema(validationContext, getValidatorType().getValue(), schemaNode.get(i), parentSchema));
         }
 
         parseErrorCode(getValidatorType().getErrorCodeKey());

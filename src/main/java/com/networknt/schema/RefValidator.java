@@ -37,9 +37,9 @@ public class RefValidator extends BaseJsonValidator implements JsonValidator {
     private final String REF_CURRENT = "#";
     private final String REF_RELATIVE = "../";
 
-    public RefValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema, ObjectMapper mapper) {
+    public RefValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema, ValidationContext validationContext) {
 
-        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.REF);
+        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.REF, validationContext);
         String refValue = schemaNode.asText();
         if (!refValue.startsWith(REF_CURRENT)) {
             // handle remote ref
@@ -52,7 +52,7 @@ public class RefValidator extends BaseJsonValidator implements JsonValidator {
         		schemaUrl = obtainAbsolutePath(parentSchema, schemaUrl);
         	}
             
-            JsonSchemaFactory factory = new JsonSchemaFactory(mapper);
+            JsonSchemaFactory factory = new JsonSchemaFactory(validationContext.getJsonSchemaFactory().getMapper());
             try {
                 URL url = URLFactory.toURL(schemaUrl);
                 parentSchema = factory.getSchema(url);
@@ -71,7 +71,7 @@ public class RefValidator extends BaseJsonValidator implements JsonValidator {
         } else {
             JsonNode node = parentSchema.getRefSchemaNode(refValue);
             if (node != null) {
-                schema = new JsonSchema(mapper, refValue, node, parentSchema);
+                schema = new JsonSchema(validationContext, refValue, node, parentSchema);
             }
         }
     }

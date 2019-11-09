@@ -32,8 +32,8 @@ public class ReadOnlyValidator extends BaseJsonValidator implements JsonValidato
 
     private List<String> fieldNames = new ArrayList<String>();
 
-    public ReadOnlyValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema, ObjectMapper mapper) {
-        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.READ_ONLY);
+    public ReadOnlyValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema, ValidationContext validationContext) {
+        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.READ_ONLY, validationContext);
         if (schemaNode.isArray()) {
             int size = schemaNode.size();
             for (int i = 0; i < size; i++) {

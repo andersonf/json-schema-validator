@@ -29,9 +29,8 @@ public class MaxPropertiesValidator extends BaseJsonValidator implements JsonVal
 
     private int max;
 
-    public MaxPropertiesValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema,
-                                  ObjectMapper mapper) {
-        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.MAX_PROPERTIES);
+    public MaxPropertiesValidator(String schemaPath, JsonNode schemaNode, JsonSchema parentSchema, ValidationContext validationContext) {
+        super(schemaPath, schemaNode, parentSchema, ValidatorTypeCode.MAX_PROPERTIES, validationContext);
         if (schemaNode.isIntegralNumber()) {
             max = schemaNode.intValue();
         }
