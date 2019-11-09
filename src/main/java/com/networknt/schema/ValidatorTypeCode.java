@@ -58,7 +58,7 @@ public enum ValidatorTypeCode implements Keyword, ErrorMessageType {
     PATTERN("pattern", "1023", new MessageFormat("{0}: does not match the regex pattern {1}")),
     PROPERTIES("properties", "1025", new MessageFormat("{0}: has an error with 'properties'")),
     READ_ONLY("readOnly", "1032", new MessageFormat("{0}: is a readonly field, it cannot be changed")),
-    REF("$ref", "1026", new MessageFormat("{0}: has an error with 'refs'")),
+    REF("ref", "1026", new MessageFormat("{0}: has an error with 'refs'")),
     REQUIRED("required", "1028", new MessageFormat("{0}.{1}: is missing but it is required")),
     TYPE("type", "1029", new MessageFormat("{0}: {1} found, {2} expected")),
     UNION_TYPE("unionType", "1030", new MessageFormat("{0}: {1} found, but {2} is required")),
